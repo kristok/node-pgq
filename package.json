@@ -1,5 +1,5 @@
 {
-  "name": "pgq-node",
+  "name": "node-pgq",
   "version": "0.0.1",
   "description": "Node implementation of PostgreSQL SkyTools PGQ ",
   "main": "index.js",
@@ -13,11 +13,16 @@
     "queue",
     "transactional"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kristok/node-pgq.git"
+  },
   "author": "Kristo Kaiv",
   "license": "ISC",
   "dependencies": {
     "lodash": "^3.10.0",
-    "pg": "4.4.0"
+    "pg": "4.4.0",
+    "async": "^1.4.2"
   },
   "devDependencies": {
     "mocha": "^2.2.5",

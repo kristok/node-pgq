@@ -1,0 +1,47 @@
+{
+	// To fix column positions for JSHint errors you may want to add `"indent": 1` to your
+	// **User** "jshint_options". This issue affects users with tabs for indentation.
+	// This fix was reverted due to a conflict with using the `"white": true` option.
+
+	"indent": 4,
+
+	// This options prohibits the use of == and != in favor of === and !==. The former try to coerce values
+	// before comparing them which can lead to some unexpected results. The latter don't do any coercion so
+	// they are generally safer. If you would like to learn more about type coercion in JavaScript,
+	// we recommend Truth, Equality and JavaScript by Angus Croll.
+
+	"eqeqeq": true,
+
+	// This option prohibits the use of a variable before it was defined. JavaScript has function scope only
+	// and, in addition to that, all variables are always moved—or hoisted— to the top of the function.
+	// This behavior can lead to some very nasty bugs and that's why it is safer to always use variable
+	// only after they have been explicitly defined.
+	// Setting this option to "nofunc" will allow function declarations to be ignored.
+
+	"latedef": "nofunc",
+
+	// This option warns about "non-breaking whitespace" characters. These characters can be entered
+	// with option-space on Mac computers and have a potential of breaking non-UTF8 web pages.
+
+	"nonbsp": true,
+
+	// This option prohibits the use of explicitly undeclared variables. This option is very useful for
+	// spotting leaking and mistyped variables. If your variable is defined in another file, you can use
+	// /*global ... */ directive to tell JSHint about it.
+
+	"undef": true,
+
+	// This option warns when you define and never use your variables. It is very useful for general code
+	// cleanup, especially when used in addition to undef.
+
+	"unused": true,
+
+	// This option lets you control cyclomatic complexity throughout your code. Cyclomatic complexity measures the number of linearly independent paths through a program's source code. Read more about cyclomatic complexity on Wikipedia.
+
+	"maxcomplexity": 5,
+
+	// RELAX -------------------------------------------------------------------------------------------
+
+	"node": true,
+	"mocha": true
+}

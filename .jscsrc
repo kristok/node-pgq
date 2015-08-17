@@ -1,0 +1,37 @@
+{
+	"requireCommaBeforeLineBreak": true,
+	"disallowEmptyBlocks": true,
+	"disallowFunctionDeclarations": true,
+	"disallowKeywordsOnNewLine": ["else", "catch"],
+	"disallowMixedSpacesAndTabs": true,
+	"disallowMultipleLineStrings": true,
+	"disallowMultipleSpaces": true,
+	"disallowNewlineBeforeBlockStatements": true,
+	"disallowOperatorBeforeLineBreak": ["."],
+	"disallowQuotedKeysInObjects": true,
+	"disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "~", "!"],
+	"disallowSpaceBeforePostfixUnaryOperators": ["++", "--"],
+	"disallowSpacesInCallExpression": true,
+	"maximumLineLength": 100,
+	"maximumNumberOfLines": 500,
+	"requireBlocksOnNewline": true,
+	"requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
+	"requireCommaBeforeLineBreak": true,
+	"requireDotNotation": true,
+	"requireLineBreakAfterVariableAssignment": true,
+	"requireSemicolons": true,
+	"requireSpaceAfterKeywords": ["do","for","if","else","switch","case","try","catch","void","while","with","return","typeof"],
+	"requireSpaceBetweenArguments": true,
+	"requireSpacesInConditionalExpression": {
+		"afterTest": true,
+		"beforeConsequent": true,
+		"afterConsequent": true,
+		"beforeAlternate": true
+	},
+	"requireSpacesInFunction": {
+		"beforeOpeningCurlyBrace": true
+	},
+	"validateIndentation": "\t",
+	"validateLineBreaks": "LF",
+	"validateParameterSeparator": ", "
+}
