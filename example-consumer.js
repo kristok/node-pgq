@@ -9,9 +9,8 @@ var pgq = require('./index.js'),
 	},
 	consumer;
 
-pgq
-.setUp(config.source.database)
-.watchTables('my_table', config.source.queue, function(err) {
+pgq.setUp(config.source.database)
+.watchTables('cloudplay.playlists', config.source.queue, function(err) {
 	if (err) {
 		console.log('failed to set up watched tables ', err);
 		process.exit(1);
