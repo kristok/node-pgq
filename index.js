@@ -1,3 +1,3 @@
 exports.Consumer = require('./lib/consumer');
-exports.setUp = require('./lib/setup');
-
+exports.Setup = require('./lib/setup');
+exports.Ticker = require('./lib/ticker');

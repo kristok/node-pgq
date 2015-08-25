@@ -7,9 +7,10 @@ var pgq = require('./index.js'),
 		},
 		logDebug: true
 	},
-	consumer;
+	consumer,
+	ticker;
 
-pgq.setUp(config.source.database)
+pgq.Setup(config.source.database)
 .watchTables('cloudplay.playlists', config.source.queue, function(err) {
 	if (err) {
 		console.log('failed to set up watched tables ', err);
@@ -32,5 +33,8 @@ pgq.setUp(config.source.database)
 	consumer.on('connect', function() {
 		console.log('consumer connected');
 	});
+
+	ticker = new pgq.Ticker({database: config.source.database});
+	ticker.start();
 
 });
