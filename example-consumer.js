@@ -22,6 +22,8 @@ pgq.Setup(config.source.database)
 
 	consumer.on('event', function(ev) {
 		console.log('received event with id :'+ev.id);
+		console.log(ev);
+
 		ev.tagDone();
 	});
 
@@ -30,8 +32,12 @@ pgq.Setup(config.source.database)
 		console.log(err);
 	});
 
-	consumer.on('connect', function() {
+	consumer.on('connected', function() {
 		console.log('consumer connected');
+	});
+
+	consumer.on('log', function(msg) {
+		console.log(msg);
 	});
 
 	ticker = new pgq.Ticker({database: config.source.database});
