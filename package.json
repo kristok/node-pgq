@@ -1,6 +1,6 @@
 {
   "name": "node-pgq",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Node implementation of PostgreSQL SkyTools PGQ ",
   "main": "index.js",
   "scripts": {
