@@ -24,7 +24,7 @@ pgq.Setup(config.source.database)
 		console.log('received event with id :'+ev.id);
 		console.log(ev);
 
-		ev.failBatch();
+		ev.tagDone();
 	});
 
 	consumer.on('error', function(err) {

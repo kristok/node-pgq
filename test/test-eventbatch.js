@@ -36,18 +36,14 @@ describe('eventbatch.js', function() {
 		fake;
 
 	beforeEach(function() {
-		var dbapi = {
-			finishBatch: null,
-			eventTagRetry: null,
-			eventTagRetrySeconds: null
-		};
-		fake = {
-			'./dbapi': dbapi,
-			dbapi: dbapi
-		};
-		subject = proxyrequire('../lib/eventbatch', fake);
+		subject = proxyrequire('../lib/eventbatch', {});
 		consumer = {
-			emit: sinon.spy()
+			emit: sinon.spy(),
+			dbapi: {
+				finishBatch: null,
+				eventTagRetry: null,
+				eventTagRetrySeconds: null
+			}
 		};
 	});
 
@@ -64,31 +60,31 @@ describe('eventbatch.js', function() {
 	});
 
 	it('calls finishBatch when all events are tagged done', function(done) {
-		fake.dbapi.finishBatch = sinon.spy().withArgs(batchId);
+		consumer.dbapi.finishBatch = sinon.spy().withArgs(batchId);
 		var batch = new subject(consumer, queueName, batchId, mockData);
 		batch.tagDone('8');
 		batch.tagDone('9');
-		assert.ok(fake.dbapi.finishBatch.calledOnce);
+		assert.ok(consumer.dbapi.finishBatch.calledOnce);
 		done();
 	});
 
 	it('calls finishBatch when some events are tagged retry', function(done) {
 		var expectedData = {finish_batch: 1};
-		fake.dbapi.finishBatch = sinon.stub().yields(null, expectedData);
-		fake.dbapi.eventTagRetrySeconds = sinon.stub().yields();
+		consumer.dbapi.finishBatch = sinon.stub().yields(null, expectedData);
+		consumer.dbapi.eventTagRetrySeconds = sinon.stub().yields();
 
 		var batch = new subject(consumer, queueName, batchId, mockData);
 		batch.tagDone('8');
 		batch.tagRetrySeconds('9', 5000, function(err, data) {
-			assert.ok(fake.dbapi.finishBatch.calledOnce);
+			assert.ok(consumer.dbapi.finishBatch.calledOnce);
 			assert.equal(data, expectedData);
 			done();
 		});
 	});
 
 	it('calls the callback of retry in case it is provided', function(done) {
-		fake.dbapi.eventTagRetrySeconds = sinon.stub().yields();
-		fake.dbapi.finishBatch = sinon.stub().yields();
+		consumer.dbapi.eventTagRetrySeconds = sinon.stub().yields();
+		consumer.dbapi.finishBatch = sinon.stub().yields();
 
 		var batch = new subject(consumer, queueName, batchId, mockData);
 		batch.tagDone('8');
