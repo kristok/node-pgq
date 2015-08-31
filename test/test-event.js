@@ -26,7 +26,8 @@ describe('event.js', function() {
 			tagDone: sinon.spy(),
 			tagRetrySeconds: sinon.spy(),
 			tagRetryTimestamp: sinon.spy(),
-			tagBatchDone: sinon.spy()
+			tagBatchDone: sinon.spy(),
+			failBatch: sinon.spy()
 		};
 	});
 
@@ -54,21 +55,51 @@ describe('event.js', function() {
 		done();
 	});
 
-	it('forwards tagRetry calls with seconds to batch', function(done) {
+	describe('tagRetry', function() {
+		it('forwards calls with seconds to batch', function(done) {
+			var ev = new subject(batchTracker, queueName, batchId, mockData);
+			ev.tagRetry(30);
+			assert.ok(batchTracker.tagRetrySeconds.calledWith(mockData.ev_id));
+			done();
+		});
+
+		it('forwards calls with timestamps (Date) to batch', function(done) {
+			var ev = new subject(batchTracker, queueName, batchId, mockData),
+				retryTime = new Date((new Date()).getTime() + 60000);
+
+			ev.tagRetry(retryTime);
+			assert.ok(batchTracker.tagRetryTimestamp.calledWith(mockData.ev_id));
+			done();
+		});
+
+		it('forwards calls with timestamps (String) to batch', function(done) {
+			var ev = new subject(batchTracker, queueName, batchId, mockData),
+				retryTime = '2016-08-01 11:11:11';
+
+			ev.tagRetry(retryTime);
+			assert.ok(batchTracker.tagRetryTimestamp.calledWith(mockData.ev_id));
+			done();
+		});
+
+		it('fails calls when argument type is wrong', function(done) {
+			var ev = new subject(batchTracker, queueName, batchId, mockData),
+				retryTime = {};
+
+			assert.throws(
+				function() {
+					ev.tagRetry(retryTime);
+				},
+				/needs seconds or date/
+			);
+			done();
+		});
+	});
+
+	it('forwards failBatch calls to batch', function(done) {
 		var ev = new subject(batchTracker, queueName, batchId, mockData);
-		ev.tagRetry(30);
-		assert.ok(batchTracker.tagRetrySeconds.calledWith(mockData.ev_id));
+		ev.failBatch();
+		assert.ok(batchTracker.failBatch.called);
 		done();
 	});
-
-	it('forwards tagRetry calls with timestamps to batch', function(done) {
-		var ev = new subject(batchTracker, queueName, batchId, mockData),
-			retryTime = new Date((new Date()).getTime() + 60000);
-
-		ev.tagRetry(retryTime);
-		assert.ok(batchTracker.tagRetryTimestamp.calledWith(mockData.ev_id));
-		done();
-	});
-
 
 });

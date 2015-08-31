@@ -40,7 +40,7 @@ pgq.Setup(config.source.database)
 		console.log(msg);
 	});
 
-	ticker = new pgq.Ticker({database: config.source.database});
+	ticker = pgq.Ticker({database: config.source.database});
 	ticker.start();
 
 });
