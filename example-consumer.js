@@ -3,6 +3,7 @@ var pgq = require('./index.js'),
 		consumerName: 'example_consumer',
 		source: {
 			database: 'postgres://dev:dev@localhost:5432/wtaibu_monitooring',
+			//database: 'postgres://postgres@192.168.99.100:32768/postgres',
 			queue: 'table.changes'
 		},
 		logDebug: true

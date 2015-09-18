@@ -17,7 +17,8 @@ describe('setup.js', function() {
 		};
 		fake = {
 			dbapi: dbapiModule,
-			'./dbapi': dbapiModule
+			'./dbapi': dbapiModule,
+			'./installpgq': sinon.stub().yields()
 		};
 		subject = proxyrequire('../lib/setup', fake);
 	});
