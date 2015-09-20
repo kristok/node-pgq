@@ -217,6 +217,36 @@ describe('dbapi.js', function() {
 			);
 		});
 
+		it('checkIfPgQSchemaExists', function(done) {
+			test(
+				instance.checkIfPgQSchemaExists,
+				[],
+				null,
+				'first',
+				done
+			);
+		});
+
+		it('sendQuery', function(done) {
+			test(
+				instance.sendQuery,
+				['SELECT 1'],
+				[],
+				'query',
+				done
+			);
+		});
+
+		it('upgradeSchema', function(done) {
+			test(
+				instance.upgradeSchema,
+				[],
+				null,
+				'first',
+				done
+			);
+		});
+
 	});
 
 	describe('addTableTrigger', function() {
