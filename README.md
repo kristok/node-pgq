@@ -15,4 +15,6 @@ PgQ is the messaging broker implementation for PostgreSQL databases built by Sky
 
 The original PgQ implementation is written in C, python & PL/pgSQL and available as part of the Skytools package here: https://github.com/markokr/skytools 
 
+<a href="https://travis-ci.org/kristok/node-pgq"><img 
+src="https://travis-ci.org/kristok/node-pgq.svg" /></a>
 <a href="https://codeclimate.com/github/kristok/node-pgq"><img src="https://codeclimate.com/github/kristok/node-pgq/badges/gpa.svg" /></a> <a href="https://codeclimate.com/github/kristok/node-pgq/coverage"><img src="https://codeclimate.com/github/kristok/node-pgq/badges/coverage.svg" /></a>
