@@ -12,6 +12,7 @@ PgQ is the messaging broker implementation for PostgreSQL databases built by Sky
  - You can create your own message formats
  - No limits on message consumers or producers
  - No additional technology stack needed, some tables, functions & triggers are added into your database. Everything else can be controlled from Node.js
+ - Node.js code has 100% unit test branch coverage and we will keep it that way
 
 The original PgQ implementation is written in C, python & PL/pgSQL and available as part of the Skytools package here: https://github.com/markokr/skytools 
 
