@@ -5,16 +5,16 @@ var sinon = require('sinon'),
 describe('event.js', function() {
 	var subject,
 		mockData = {
-			ev_id: '8',
-			ev_time: new Date('Sun Aug 02 2015 18:14:04 GMT+0300 (EEST)'),
-			ev_txid: '196333',
-			ev_retry: null,
-			ev_type: 'UPDATE',
-			ev_data: '{"id": 1, "user_id": 2}',
-			ev_extra1: '{"id": 1, "user_id": 3}',
-			ev_extra2: 'sometable',
-			ev_extra3: 'pk,ids',
-			ev_extra4: null
+			id: '8',
+			time: new Date('Sun Aug 02 2015 18:14:04 GMT+0300 (EEST)'),
+			txid: '196333',
+			retry: null,
+			type: 'log_json',
+			data: '{"id": 1, "user_id": 2}',
+			prev_data: '{"id": 1, "user_id": 3}',
+			table: 'sometable',
+			primary_keys: 'pk,ids',
+			operation: 'UPDATE'
 		},
 		batchId = 10,
 		queueName = 'my_queue',
@@ -36,14 +36,19 @@ describe('event.js', function() {
 			expectedData = {
 				id: '1',
 				user_id: '2'
+			},
+			expectedPrevData = {
+				id: '1',
+				user_id: '3'
 			};
 
 		assert.equal(ev.queueName, queueName);
 		assert.equal(ev.batchId, batchId);
-		assert.equal(ev.id, mockData.ev_id);
-		assert.equal(ev.extra1, mockData.ev_extra1);
-		assert.equal(ev.time, mockData.ev_time);
+		assert.equal(ev.id, mockData.id);
+		assert.equal(ev.time, mockData.time);
 		assert.deepEqual(ev.data, expectedData);
+		assert.deepEqual(ev.prev_data, expectedPrevData);
+		assert.deepEqual(ev.primary_keys, ['pk', 'ids']);
 		assert.equal(ev.state, subject.UNTAGGED);
 		done();
 	});
@@ -51,7 +56,7 @@ describe('event.js', function() {
 	it('forwards tagDone calls to batch', function(done) {
 		var ev = new subject(batchTracker, queueName, batchId, mockData);
 		ev.tagDone();
-		assert.ok(batchTracker.tagDone.calledWith(mockData.ev_id));
+		assert.ok(batchTracker.tagDone.calledWith(mockData.id));
 		done();
 	});
 
@@ -59,7 +64,7 @@ describe('event.js', function() {
 		it('forwards calls with seconds to batch', function(done) {
 			var ev = new subject(batchTracker, queueName, batchId, mockData);
 			ev.tagRetry(30);
-			assert.ok(batchTracker.tagRetrySeconds.calledWith(mockData.ev_id));
+			assert.ok(batchTracker.tagRetrySeconds.calledWith(mockData.id));
 			done();
 		});
 
@@ -68,7 +73,7 @@ describe('event.js', function() {
 				retryTime = new Date((new Date()).getTime() + 60000);
 
 			ev.tagRetry(retryTime);
-			assert.ok(batchTracker.tagRetryTimestamp.calledWith(mockData.ev_id));
+			assert.ok(batchTracker.tagRetryTimestamp.calledWith(mockData.id));
 			done();
 		});
 
@@ -77,7 +82,7 @@ describe('event.js', function() {
 				retryTime = '2016-08-01 11:11:11';
 
 			ev.tagRetry(retryTime);
-			assert.ok(batchTracker.tagRetryTimestamp.calledWith(mockData.ev_id));
+			assert.ok(batchTracker.tagRetryTimestamp.calledWith(mockData.id));
 			done();
 		});
 
@@ -99,6 +104,16 @@ describe('event.js', function() {
 		var ev = new subject(batchTracker, queueName, batchId, mockData);
 		ev.failBatch();
 		assert.ok(batchTracker.failBatch.called);
+		done();
+	});
+
+	it('throws when type is not log_json', function(done) {
+		assert.throws(
+			function() {
+				new subject(batchTracker, queueName, batchId, {type: 'wrong' });
+			},
+			/log_json/
+		);
 		done();
 	});
 
