@@ -63,12 +63,12 @@ BEGIN
 	-- insert event into the queue
 	PERFORM * FROM pgq.insert_event(
 		queue::text,
-		TG_OP::text,
+		'log_json'::text,
 		row_to_json(NEW)::text,
 		row_to_json(OLD)::text,
 		table_name::text,
 		primary_key_columns::text,
-		NULL::text
+		TG_OP::text
 	);
 
 	-- if skip is set we don't write to the table, just throw away the data
