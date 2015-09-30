@@ -5,6 +5,7 @@ var sinon = require('sinon'),
 describe('installpgq.js', function() {
 	var subject,
 		api,
+		setup,
 		fake;
 
 	beforeEach(function() {
@@ -14,12 +15,15 @@ describe('installpgq.js', function() {
 				getSql: sinon.stub().returns('SQL')
 			}
 		};
+		setup = {
+			emit: sinon.spy()
+		};
 		subject = proxyrequire('../lib/installpgq', fake);
 	});
 
 	it('should skip if pgq schema is installed', function(done) {
 		api.checkIfPgQSchemaExists = sinon.stub().yields(null, {exists: true});
-		subject(api, function(err) {
+		subject(api, setup, function(err) {
 			assert.ok(!err);
 			done();
 		});
@@ -28,7 +32,7 @@ describe('installpgq.js', function() {
 	it('should run sql when pgq schema does not exist', function(done) {
 		api.checkIfPgQSchemaExists = sinon.stub().yields();
 		api.sendQuery = sinon.stub().yields();
-		subject(api, function(err) {
+		subject(api, setup, function(err) {
 			assert.ok(!err);
 			assert.ok(api.sendQuery.withArgs('SQL').calledOnce);
 			done();
@@ -38,7 +42,17 @@ describe('installpgq.js', function() {
 	it('should fail on error', function(done) {
 		var expectedErr = new Error('err');
 		api.checkIfPgQSchemaExists = sinon.stub().yields(expectedErr);
-		subject(api, function(err) {
+		subject(api, setup, function(err) {
+			assert.equal(err, expectedErr);
+			done();
+		});
+	});
+
+	it('should fail on apply sql error', function(done) {
+		var expectedErr = new Error('err');
+		api.checkIfPgQSchemaExists = sinon.stub().yields();
+		api.sendQuery = sinon.stub().yields(expectedErr);
+		subject(api, setup, function(err) {
 			assert.equal(err, expectedErr);
 			done();
 		});

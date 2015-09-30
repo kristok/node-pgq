@@ -9,12 +9,18 @@ var pgq = require('./index.js'),
 		logDebug: true
 	},
 	consumer,
+	pgqSetup,
 	ticker;
 
-pgq.Setup(config.source.database)
-.watchTables('cloudplay.playlists', config.source.queue, function(err) {
+pgqSetup = pgq.Setup(config.source.database);
+pgqSetup.on('log', function(msg) {
+	console.log('SETUP: '+msg);
+});
+
+pgqSetup.watchTables('cloudplay.playlists', config.source.queue, function(err) {
 	if (err) {
-		console.log('failed to set up watched tables ', err);
+		console.log('failed to set up watched tables');
+		console.log(err);
 		process.exit(1);
 	}
 
@@ -22,23 +28,23 @@ pgq.Setup(config.source.database)
 	consumer.connect();
 
 	consumer.on('event', function(ev) {
-		console.log('received event with id :'+ev.id);
+		console.log('CONSUMER: received event with id :'+ev.id);
 		console.log(ev);
 
 		ev.tagDone();
 	});
 
 	consumer.on('error', function(err) {
-		console.log('got error');
+		console.log('CONSUMER: got error');
 		console.log(err);
 	});
 
 	consumer.on('connected', function() {
-		console.log('consumer connected');
+		console.log('CONSUMER: connected');
 	});
 
 	consumer.on('log', function(msg) {
-		console.log(msg);
+		console.log('CONSUMER: '+msg);
 	});
 
 	ticker = pgq.Ticker({database: config.source.database});
