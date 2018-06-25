@@ -29,6 +29,8 @@ DECLARE
 	primary_key_columns text;
 	table_name text;
 	_res record;
+	_old_json_string text;
+	_new_json_string text;
 BEGIN
 
 	-- validate that arguments defined during trigger creation are correct
@@ -60,12 +62,27 @@ BEGIN
 	   AND NOT a.attisdropped
 	  INTO primary_key_columns;
 
+	IF TG_OP = 'UPDATE' THEN
+		_old_json_string := row_to_json(OLD)::text;
+		_new_json_string := row_to_json(NEW)::text;
+	END IF;
+
+	IF TG_OP = 'INSERT' THEN
+		_old_json_string := '{}'::text;
+		_new_json_string := row_to_json(NEW)::text;
+	END IF;
+
+	IF TG_OP = 'TRUNCATE' OR TG_OP = 'DELETE' THEN
+		_old_json_string := row_to_json(OLD)::text;
+		_new_json_string := '{}'::text;
+	END IF;
+
 	-- insert event into the queue
 	PERFORM * FROM pgq.insert_event(
 		queue::text,
 		'log_json'::text,
-		row_to_json(NEW)::text,
-		row_to_json(OLD)::text,
+		_new_json_string::text,
+		_old_json_string::text,
 		table_name::text,
 		primary_key_columns::text,
 		TG_OP::text
